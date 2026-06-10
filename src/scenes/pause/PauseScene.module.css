@@ -311,3 +311,36 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
+
+:global([data-owbt-broadcast-style='owcs']) .scene {
+  background: var(--theme-background-gradient);
+  color: var(--theme-broadcast-ink);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .gridLayer {
+  background: radial-gradient(circle, rgba(47,59,69,0.1) 0 1.3px, transparent 1.6px);
+  background-size: 24px 24px;
+  opacity: 0.34;
+}
+
+:global([data-owbt-broadcast-style='owcs']) .pausePanel,
+:global([data-owbt-broadcast-style='owcs']) .matchFrame,
+:global([data-owbt-broadcast-style='owcs']) .statusPill {
+  border-color: var(--theme-broadcast-line);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.36)),
+    var(--theme-broadcast-panel);
+  box-shadow: var(--theme-broadcast-shadow), inset 0 0 0 1px rgba(255,255,255,0.72);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .title,
+:global([data-owbt-broadcast-style='owcs']) .description,
+:global([data-owbt-broadcast-style='owcs']) .footer {
+  color: var(--theme-broadcast-ink);
+  text-shadow: none;
+}
+
+:global([data-owbt-broadcast-style='owcs']) .statusLabel,
+:global([data-owbt-broadcast-style='owcs']) .statusPill {
+  color: var(--theme-broadcast-accent);
+}

@@ -1,12 +1,12 @@
 const COLORS = {
-  black: '#050505',
-  deepBlack: '#151515',
+  black: 'var(--legacy-black, #050505)',
+  deepBlack: 'var(--legacy-deep-black, #151515)',
   yellow: 'var(--theme-primary)',
-  white: '#ffffff',
-  line: 'rgba(255,255,255,0.08)',
-  lineStrong: 'rgba(255,255,255,0.18)',
-  softWhite: 'rgba(255,255,255,0.72)',
-  faintWhite: 'rgba(255,255,255,0.26)'
+  white: 'var(--legacy-white, #ffffff)',
+  line: 'var(--legacy-line, rgba(255,255,255,0.08))',
+  lineStrong: 'var(--legacy-line-strong, rgba(255,255,255,0.18))',
+  softWhite: 'var(--legacy-soft-white, rgba(255,255,255,0.72))',
+  faintWhite: 'var(--legacy-faint-white, rgba(255,255,255,0.26))'
 };
 
 const UI = {
@@ -390,7 +390,7 @@ export default function StartingLineupScene({ matchData = {} }) {
   const totalReadyCount = teamA.players.filter(Boolean).length + teamB.players.filter(Boolean).length;
 
   return (
-    <div style={{ width: '1920px', height: '1080px', position: 'relative', overflow: 'hidden', backgroundColor: COLORS.black, fontFamily: '"HarmonyOS Sans SC", sans-serif' }}>
+    <div style={{ width: '1920px', height: '1080px', position: 'relative', overflow: 'hidden', backgroundColor: COLORS.black, backgroundImage: 'var(--legacy-scene-bg-image, none)', fontFamily: '"HarmonyOS Sans SC", sans-serif' }}>
       <style>{`
         @keyframes lineupHeaderIn {
           0% { opacity: 0; transform: translateY(-28px); filter: blur(8px); }

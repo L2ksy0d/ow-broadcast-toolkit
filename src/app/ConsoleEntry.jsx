@@ -9,6 +9,7 @@ import { getAppCopy, getAppLanguage } from './appCopy'
 import { EditorDialog } from './editors/shared/editorControls'
 import { getOverlayUrl } from './overlayUrl'
 import { fileToDataUrl } from './toolbox/toolboxModel'
+import { BROADCAST_STYLES, normalizeBroadcastStyle } from '../theme/broadcastStyles'
 import styles from './ConsoleEntry.module.css'
 
 const isSupportedLogoFile = file => (
@@ -39,6 +40,7 @@ export default function ConsoleEntry({
   const logoBackdrop = ['dark', 'light', 'none'].includes(project.event.logoBackdrop)
     ? project.event.logoBackdrop
     : 'auto'
+  const broadcastStyle = normalizeBroadcastStyle(project.theme?.broadcastStyle)
   const eventLogoSource = getEventLogo(project)
   const hasConfiguredLogo = Boolean(project.event.logo || project.event.organizerLogo)
   const eventLogoStatus = hasConfiguredLogo ? copy.eventLogoReady : copy.eventLogoDefault
@@ -104,6 +106,13 @@ export default function ConsoleEntry({
 
     onUpdateProject(draft => {
       draft.theme.primary = value
+    })
+  }
+
+  const updateBroadcastStyle = value => {
+    onUpdateProject(draft => {
+      if (!draft.theme) draft.theme = {}
+      draft.theme.broadcastStyle = normalizeBroadcastStyle(value)
     })
   }
 
@@ -292,6 +301,22 @@ export default function ConsoleEntry({
                         onClick={() => updateLogoBackdrop(option.value)}
                       >
                         {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </label>
+
+                <label className={styles.field}>
+                  <span>{copy.broadcastStyle}</span>
+                  <div className={styles.segmented}>
+                    {BROADCAST_STYLES.map(option => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        className={broadcastStyle === option.id ? styles.segmentActive : ''}
+                        onClick={() => updateBroadcastStyle(option.id)}
+                      >
+                        {copy[`broadcastStyle${option.id === 'owcs' ? 'Owcs' : 'Owbt'}`] || option.name}
                       </button>
                     ))}
                   </div>

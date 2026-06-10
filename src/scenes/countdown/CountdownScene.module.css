@@ -1173,3 +1173,44 @@
     opacity: 0.28;
   }
 }
+
+:global([data-owbt-broadcast-style='owcs']) .scene {
+  background: var(--theme-background-gradient);
+  color: var(--theme-broadcast-ink);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .grid {
+  background: radial-gradient(circle, rgba(47,59,69,0.1) 0 1.3px, transparent 1.6px);
+  background-size: 24px 24px;
+  opacity: 0.34;
+}
+
+:global([data-owbt-broadcast-style='owcs']) .topbar,
+:global([data-owbt-broadcast-style='owcs']) .standbyPanel,
+:global([data-owbt-broadcast-style='owcs']) .matchCard,
+:global([data-owbt-broadcast-style='owcs']) .scheduleCard,
+:global([data-owbt-broadcast-style='owcs']) .sponsorCard {
+  border-color: var(--theme-broadcast-line);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.36)),
+    var(--theme-broadcast-panel);
+  box-shadow: var(--theme-broadcast-shadow), inset 0 0 0 1px rgba(255,255,255,0.72);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .standbyPanel {
+  border-left-color: var(--theme-broadcast-accent);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .timeValue,
+:global([data-owbt-broadcast-style='owcs']) .headline,
+:global([data-owbt-broadcast-style='owcs']) .title,
+:global([data-owbt-broadcast-style='owcs']) .footer span {
+  color: var(--theme-broadcast-ink);
+  text-shadow: none;
+}
+
+:global([data-owbt-broadcast-style='owcs']) .status,
+:global([data-owbt-broadcast-style='owcs']) .interfaceLabel,
+:global([data-owbt-broadcast-style='owcs']) .footer strong {
+  color: var(--theme-broadcast-accent);
+}

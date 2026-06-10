@@ -5,16 +5,16 @@ import BeginInfoOverlay from './BeginInfoOverlay';
 import BanPhaseScene from './BanPhaseScene';
 
 const COLORS = {
-  mainDark: '#2A2A2A',
-  panelDark: '#242424',
-  panelDeep: '#1f1f1f',
+  mainDark: 'var(--legacy-main-dark, #2A2A2A)',
+  panelDark: 'var(--legacy-panel-dark, #242424)',
+  panelDeep: 'var(--legacy-panel-deep, #1f1f1f)',
   yellow: 'var(--theme-primary)',
-  white: '#ffffff',
-  black: '#2A2A2A',
+  white: 'var(--legacy-white, #ffffff)',
+  black: 'var(--legacy-main-dark, #2A2A2A)',
   banRed: '#ff4d4d',
-  gray: '#aaaaaa',
-  line: 'rgba(255,255,255,0.05)',
-  lineStrong: 'rgba(255,255,255,0.10)'
+  gray: 'var(--legacy-soft-white, #aaaaaa)',
+  line: 'var(--legacy-line, rgba(255,255,255,0.05))',
+  lineStrong: 'var(--legacy-line-strong, rgba(255,255,255,0.10))'
 };
 
 const MODE_ICON_MAP = {

@@ -1,5 +1,6 @@
 import { getBroadcastCompetitionName, getEventLogo } from '../../project/branding'
 import { getCurrentTeams, getTeamById } from '../../project/projectUtils'
+import { isOwcsBroadcastStyle } from '../../theme/broadcastStyles'
 
 const PRIMARY = 'var(--theme-primary)'
 const DARK = '#050505'
@@ -64,6 +65,7 @@ const resolveWinner = (project, teamA, teamB) => {
 }
 
 export default function ResultScene({ project }) {
+  const isOwcs = isOwcsBroadcastStyle(project)
   const settings = project?.scenes?.settings?.result || {}
   const match = project?.currentMatch || {}
   const { teamA, teamB } = getCurrentTeams(project)
@@ -75,6 +77,24 @@ export default function ResultScene({ project }) {
   const winnerLogo = winner ? getTeamLogo(winner) : '/OW.svg'
   const scoreLine = `${match.score?.teamA ?? 0} : ${match.score?.teamB ?? 0}`
   const note = `FT${match.ft || 3} // ${scoreLine}`
+  const rootBackground = isOwcs
+    ? 'var(--theme-background-gradient)'
+    : `linear-gradient(180deg, ${DARK} 0%, ${PANEL} 100%)`
+  const rootText = isOwcs ? 'var(--theme-broadcast-ink)' : '#fff'
+  const line = isOwcs ? 'var(--theme-broadcast-line)' : LINE
+  const lineStrong = isOwcs ? 'var(--theme-broadcast-line-strong)' : LINE_STRONG
+  const panelBackground = isOwcs
+    ? 'linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.36))'
+    : 'linear-gradient(180deg, rgba(255,255,255,0.018) 0%, rgba(255,255,255,0.008) 100%)'
+  const winnerCardBackground = isOwcs
+    ? `
+      radial-gradient(circle at center, rgba(240,100,20,0.08) 0%, rgba(255,255,255,0.42) 34%, rgba(255,255,255,0) 72%),
+      linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(229,233,236,0.88) 100%)
+    `
+    : `
+      radial-gradient(circle at center, color-mix(in srgb, var(--theme-primary) 10%, transparent) 0%, rgba(255,255,255,0.025) 34%, rgba(0,0,0,0) 72%),
+      linear-gradient(180deg, rgba(28,28,28,0.96) 0%, rgba(20,20,20,0.98) 100%)
+    `
 
   return (
     <div
@@ -83,9 +103,9 @@ export default function ResultScene({ project }) {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
-        background: `linear-gradient(180deg, ${DARK} 0%, ${PANEL} 100%)`,
+        background: rootBackground,
         fontFamily: 'var(--theme-font-family)',
-        color: '#fff'
+        color: rootText
       }}
     >
       <style>{WINNER_KEYFRAMES}</style>
@@ -112,7 +132,7 @@ export default function ResultScene({ project }) {
           right: 0,
           height: 44,
           background: 'rgba(255,255,255,0.02)',
-          borderBottom: `1px solid ${LINE}`,
+          borderBottom: `1px solid ${line}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -137,9 +157,9 @@ export default function ResultScene({ project }) {
         style={{
           position: 'absolute',
           inset: '96px 120px 92px',
-          border: `1px solid ${LINE_STRONG}`,
+          border: `1px solid ${lineStrong}`,
           boxShadow: '0 18px 40px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.04)',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.018) 0%, rgba(255,255,255,0.008) 100%)',
+          background: panelBackground,
           overflow: 'hidden'
         }}
       >
@@ -181,12 +201,11 @@ export default function ResultScene({ project }) {
               gap: 24,
               padding: '56px 56px 60px',
               boxSizing: 'border-box',
-              background: `
-                radial-gradient(circle at center, color-mix(in srgb, var(--theme-primary) 10%, transparent) 0%, rgba(255,255,255,0.025) 34%, rgba(0,0,0,0) 72%),
-                linear-gradient(180deg, rgba(28,28,28,0.96) 0%, rgba(20,20,20,0.98) 100%)
-              `,
-              border: `1px solid ${LINE_STRONG}`,
-              boxShadow: '0 18px 40px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.04)',
+              background: winnerCardBackground,
+              border: `1px solid ${lineStrong}`,
+              boxShadow: isOwcs
+                ? '0 18px 46px rgba(47,59,69,0.12), inset 0 0 0 1px rgba(255,255,255,0.72)'
+                : '0 18px 40px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.04)',
               opacity: 0,
               animation: 'owbtWinnerCardDrop 800ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards'
             }}
@@ -224,7 +243,7 @@ export default function ResultScene({ project }) {
                 style={{ width: '78%', height: '78%', objectFit: 'contain', display: 'block' }}
               />
             </div>
-            <div style={{ position: 'relative', zIndex: 2, maxWidth: '100%', fontSize: 56, fontWeight: 950, color: '#fff', lineHeight: 1.02, letterSpacing: 0.6, textTransform: 'uppercase', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 4px 18px rgba(0,0,0,0.25)', opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 600ms forwards' }}>
+            <div style={{ position: 'relative', zIndex: 2, maxWidth: '100%', fontSize: 56, fontWeight: 950, color: rootText, lineHeight: 1.02, letterSpacing: 0.6, textTransform: 'uppercase', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: isOwcs ? 'none' : '0 4px 18px rgba(0,0,0,0.25)', opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 600ms forwards' }}>
               {winnerName}
             </div>
             <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: 10, marginTop: 2, opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 700ms forwards' }}>

@@ -1,6 +1,7 @@
 export const DEFAULT_THEME = {
   id: 'owbt-default',
   name: 'OWBT Default',
+  broadcastStyle: 'owbt',
   primary: '#4CD3B5',
   background: '#242424',
   panel: '#2A2A2A',

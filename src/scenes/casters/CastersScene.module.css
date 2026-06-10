@@ -845,3 +845,39 @@
     opacity: 1;
   }
 }
+
+:global([data-owbt-broadcast-style='owcs']) .scene {
+  background: var(--theme-background-gradient);
+  color: var(--theme-broadcast-ink);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .grid {
+  background: radial-gradient(circle, rgba(47,59,69,0.1) 0 1.3px, transparent 1.6px);
+  background-size: 24px 24px;
+  opacity: 0.34;
+}
+
+:global([data-owbt-broadcast-style='owcs']) .topbar,
+:global([data-owbt-broadcast-style='owcs']) .casterCard,
+:global([data-owbt-broadcast-style='owcs']) .interviewPanel,
+:global([data-owbt-broadcast-style='owcs']) .deskNote,
+:global([data-owbt-broadcast-style='owcs']) .contextPanel {
+  border-color: var(--theme-broadcast-line);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.36)),
+    var(--theme-broadcast-panel);
+  box-shadow: var(--theme-broadcast-shadow), inset 0 0 0 1px rgba(255,255,255,0.72);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .casterName,
+:global([data-owbt-broadcast-style='owcs']) .brandBlock h1,
+:global([data-owbt-broadcast-style='owcs']) .footer span {
+  color: var(--theme-broadcast-ink);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .number,
+:global([data-owbt-broadcast-style='owcs']) .casterRole,
+:global([data-owbt-broadcast-style='owcs']) .footer strong,
+:global([data-owbt-broadcast-style='owcs']) .interfaceLabel {
+  color: var(--theme-broadcast-accent);
+}

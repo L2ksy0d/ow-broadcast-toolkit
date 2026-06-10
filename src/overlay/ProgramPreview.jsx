@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { getSceneById } from '../scenes/registry'
+import { getBroadcastStyle } from '../theme/broadcastStyles'
 import styles from './ProgramPreview.module.css'
 
 const PROGRAM_WIDTH = 1920
@@ -49,6 +50,7 @@ export default function ProgramPreview({
   const [transitionLogoProbe, setTransitionLogoProbe] = useState({ source: '', shape: 'square' })
   const scene = getSceneById(project.scenes.activeSceneId)
   const SceneComponent = scene.component
+  const broadcastStyle = getBroadcastStyle(project)
   const normalizedTransitionMode = normalizeTransitionMode(transitionMode)
   const transitionTiming = TRANSITION_SPEEDS[transitionSpeed] || TRANSITION_SPEEDS.normal
   const shouldAnimateScene = transitionKey > 0 && normalizedTransitionMode !== 'none'
@@ -130,6 +132,7 @@ export default function ProgramPreview({
     <div ref={frameRef} className={bare ? styles.bareFrame : styles.frame}>
       <div
         className={bare ? styles.bareCanvas : styles.canvas}
+        data-owbt-broadcast-style={broadcastStyle}
         style={{
           '--owbt-scene-resolve-duration': `${transitionTiming.resolve}ms`,
           '--owbt-transition-duration': `${transitionTiming.mask}ms`,

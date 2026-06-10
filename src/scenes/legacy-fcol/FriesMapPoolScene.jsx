@@ -1,18 +1,18 @@
 ﻿import React, { useMemo } from 'react';
 
 const COLORS = {
-  black: '#050505',
+  black: 'var(--legacy-black, #050505)',
   yellow: 'var(--theme-primary)',
-  white: '#ffffff',
-  darkGray: '#1a1a1a',
-  dimGray: '#555555',
-  panel: '#101010',
-  panel2: '#161616',
-  line: 'rgba(255,255,255,0.08)',
-  lineStrong: 'rgba(255,255,255,0.18)',
-  softWhite: 'rgba(255,255,255,0.72)',
+  white: 'var(--legacy-white, #ffffff)',
+  darkGray: 'var(--legacy-deep-black, #1a1a1a)',
+  dimGray: 'var(--legacy-dim-gray, #555555)',
+  panel: 'var(--legacy-panel, #101010)',
+  panel2: 'var(--legacy-panel-2, #161616)',
+  line: 'var(--legacy-line, rgba(255,255,255,0.08))',
+  lineStrong: 'var(--legacy-line-strong, rgba(255,255,255,0.18))',
+  softWhite: 'var(--legacy-soft-white, rgba(255,255,255,0.72))',
   primarySoft: 'var(--theme-primary-soft)',
-  shadow: 'rgba(0,0,0,0.35)'
+  shadow: 'var(--legacy-shadow, rgba(0,0,0,0.35))'
 };
 
 const UI = {
@@ -592,7 +592,7 @@ export default function MapPoolScene({ matchData = {} }) {
         position: 'relative',
         overflow: 'hidden',
         fontFamily: '"HarmonyOS Sans SC", sans-serif',
-        backgroundImage: 'radial-gradient(circle at center, rgba(42,42,42,0.88) 0%, rgba(42,42,42,0.98) 100%)'
+        backgroundImage: 'var(--legacy-scene-bg-image, radial-gradient(circle at center, rgba(42,42,42,0.88) 0%, rgba(42,42,42,0.98) 100%))'
       }}
     >
       <style>{`
