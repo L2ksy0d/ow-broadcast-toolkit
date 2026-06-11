@@ -10,6 +10,9 @@ const COLORS = {
   panelDeep: 'var(--legacy-panel-deep, #1f1f1f)',
   yellow: 'var(--theme-primary)',
   white: 'var(--legacy-white, #ffffff)',
+  hudDarkText: 'var(--legacy-hud-dark-text, #ffffff)',
+  hudDarkMuted: 'var(--legacy-hud-dark-muted, rgba(255,255,255,0.68))',
+  hudDarkFaint: 'var(--legacy-hud-dark-faint, rgba(255,255,255,0.24))',
   black: 'var(--legacy-main-dark, #2A2A2A)',
   banRed: '#ff4d4d',
   gray: 'var(--legacy-soft-white, #aaaaaa)',
@@ -40,7 +43,7 @@ const infoBarStyle = {
   left: '50%',
   transform: 'translateX(-50%)',
   backgroundColor: COLORS.mainDark,
-  color: COLORS.white,
+  color: COLORS.hudDarkText,
   padding: '5px 15px',
   fontSize: '14px',
   fontWeight: '900',
@@ -103,7 +106,7 @@ const subBarContentStyle = {
 };
 
 const subBarTextHighlight = {
-  color: COLORS.white,
+  color: COLORS.hudDarkText,
   fontSize: '12px',
   fontWeight: '900',
   letterSpacing: '1px',
@@ -111,7 +114,7 @@ const subBarTextHighlight = {
 };
 
 const subBarTextNormal = {
-  color: COLORS.gray,
+  color: COLORS.hudDarkMuted,
   fontSize: '12px',
   fontWeight: 'bold',
   letterSpacing: '1px',
@@ -146,7 +149,7 @@ const teamNameBlockStyle = {
   minWidth: 0,
   height: '45px',
   backgroundColor: COLORS.mainDark,
-  color: COLORS.white,
+  color: COLORS.hudDarkText,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -282,7 +285,7 @@ const subBadgeStyle = {
 
 const commsUnderStyle = {
   backgroundColor: 'rgba(42,42,42,0.95)',
-  color: COLORS.white,
+  color: COLORS.hudDarkText,
   height: '18px',
   display: 'flex',
   justifyContent: 'center',
@@ -676,7 +679,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                 {showTbd ? (
                   <span
                     style={{
-                      color: isCurrent ? COLORS.yellow : isFuture ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.35)',
+                      color: isCurrent ? COLORS.yellow : isFuture ? COLORS.hudDarkFaint : COLORS.hudDarkMuted,
                       fontSize: isCurrent ? '10px' : '9px',
                       fontWeight: '900',
                       letterSpacing: '0.6px',
@@ -690,7 +693,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                     style={{
                       width: '10px',
                       height: '2px',
-                      backgroundColor: 'rgba(255,255,255,0.10)',
+                      backgroundColor: COLORS.hudDarkFaint,
                       display: 'block',
                       flexShrink: 0
                     }}
@@ -726,7 +729,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                         style={{
                           width: '10px',
                           height: '2px',
-                          backgroundColor: 'rgba(255,255,255,0.10)',
+                          backgroundColor: COLORS.hudDarkFaint,
                           display: 'block',
                           flexShrink: 0
                         }}
@@ -739,7 +742,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                           style={{
                             width: '1px',
                             height: isBo7Compact ? '7px' : '8px',
-                            backgroundColor: 'rgba(255,255,255,0.18)',
+                            backgroundColor: COLORS.hudDarkFaint,
                             flexShrink: 0
                           }}
                         />
@@ -885,7 +888,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
             <div
               style={{
                 backgroundColor: COLORS.mainDark,
-                color: COLORS.white,
+                color: COLORS.hudDarkText,
                 padding: '0 20px',
                 minWidth: '92px',
                 maxWidth: '360px',
@@ -971,7 +974,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                   <div style={playerListRowStyle}>
                     {matchData.playersA?.map((p, i) => (
-                      <div key={`${p || 'empty'}-${i}`} style={{ ...playerSlotStyle, color: matchData.subIndexA === i ? COLORS.yellow : COLORS.white, fontSize: `${playerNameFontSize}px` }}>
+                      <div key={`${p || 'empty'}-${i}`} style={{ ...playerSlotStyle, color: matchData.subIndexA === i ? COLORS.yellow : COLORS.hudDarkText, fontSize: `${playerNameFontSize}px` }}>
                         {matchData.subIndexA === i && <span style={subBadgeStyle}>IN</span>}
                         {p}
                       </div>
@@ -1014,7 +1017,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                           fontWeight: '900',
                           letterSpacing: '0.8px',
                           textTransform: 'uppercase',
-                          color: COLORS.white
+                          color: COLORS.hudDarkText
                         }}
                       >
                         {currentMapNumberLabel}
@@ -1045,7 +1048,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                           fontWeight: '900',
                           letterSpacing: '0.8px',
                           textTransform: 'uppercase',
-                          color: COLORS.gray,
+                          color: COLORS.hudDarkMuted,
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -1082,7 +1085,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                   <div style={{ ...playerListRowStyle, justifyContent: 'flex-end' }}>
                     {matchData.playersB?.map((p, i) => (
-                      <div key={`${p || 'empty'}-${i}`} style={{ ...playerSlotStyle, color: matchData.subIndexB === i ? COLORS.yellow : COLORS.white, fontSize: `${playerNameFontSize}px` }}>
+                      <div key={`${p || 'empty'}-${i}`} style={{ ...playerSlotStyle, color: matchData.subIndexB === i ? COLORS.yellow : COLORS.hudDarkText, fontSize: `${playerNameFontSize}px` }}>
                         {matchData.subIndexB === i && <span style={subBadgeStyle}>IN</span>}
                         {p}
                       </div>

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { getSceneById } from '../scenes/registry'
 import { getBroadcastStyle } from '../theme/broadcastStyles'
 import styles from './ProgramPreview.module.css'
@@ -24,6 +24,13 @@ const normalizeTransitionMode = mode => {
   return mode || 'scan'
 }
 
+const getProjectSceneId = project => project?.scenes?.activeSceneId || ''
+
+const getTransitionSwapDelay = (mode, timing) => {
+  const ratio = mode === 'simple' ? 0.34 : 0.42
+  return Math.max(0, Math.min(timing.mask - 80, Math.round(timing.mask * ratio)))
+}
+
 const getTransitionLogoShape = (width, height) => {
   if (!width || !height) return 'square'
   const ratio = width / height
@@ -44,20 +51,29 @@ export default function ProgramPreview({
   transitionLogo = 'off'
 }) {
   const frameRef = useRef(null)
-  const previousSceneIdRef = useRef(project.scenes.activeSceneId)
+  const displayProjectRef = useRef(project)
+  const pendingProjectRef = useRef(null)
+  const transitionActiveRef = useRef(false)
+  const transitionTimersRef = useRef([])
   const [scale, setScale] = useState(1)
-  const [transitionKey, setTransitionKey] = useState(0)
+  const [displayProject, setDisplayProject] = useState(project)
+  const [transitionState, setTransitionState] = useState({
+    key: 0,
+    active: false,
+    resolving: false,
+    logoSource: ''
+  })
   const [transitionLogoProbe, setTransitionLogoProbe] = useState({ source: '', shape: 'square' })
-  const scene = getSceneById(project.scenes.activeSceneId)
+  const scene = getSceneById(displayProject.scenes.activeSceneId)
   const SceneComponent = scene.component
-  const broadcastStyle = getBroadcastStyle(project)
+  const broadcastStyle = getBroadcastStyle(displayProject)
   const normalizedTransitionMode = normalizeTransitionMode(transitionMode)
   const transitionTiming = TRANSITION_SPEEDS[transitionSpeed] || TRANSITION_SPEEDS.normal
-  const shouldAnimateScene = transitionKey > 0 && normalizedTransitionMode !== 'none'
+  const shouldAnimateScene = transitionState.active && normalizedTransitionMode !== 'none'
+  const shouldResolveScene = transitionState.resolving && normalizedTransitionMode !== 'none'
   const shouldShowTransitionLogo = shouldAnimateScene && normalizedTransitionMode !== 'simple'
-  const configuredTransitionLogoSource = getTransitionLogoSource(project, transitionLogo)
-  const transitionLogoSource = shouldAnimateScene ? configuredTransitionLogoSource : ''
-  const transitionLogoShape = transitionLogoProbe.source === configuredTransitionLogoSource
+  const transitionLogoSource = shouldAnimateScene ? transitionState.logoSource : ''
+  const transitionLogoShape = transitionLogoProbe.source === transitionLogoSource
     ? transitionLogoProbe.shape
     : 'square'
   const transitionClassName = [
@@ -70,6 +86,10 @@ export default function ProgramPreview({
     transitionLogo === 'event' && transitionLogoShape === 'wide' ? styles.transitionLogoEventWide : '',
     transitionLogo === 'event' && transitionLogoShape === 'tall' ? styles.transitionLogoEventTall : ''
   ].filter(Boolean).join(' ')
+  const clearTransitionTimers = useCallback(() => {
+    transitionTimersRef.current.forEach(timer => window.clearTimeout(timer))
+    transitionTimersRef.current = []
+  }, [])
 
   useLayoutEffect(() => {
     if (!frameRef.current || typeof ResizeObserver === 'undefined') return undefined
@@ -93,37 +113,95 @@ export default function ProgramPreview({
   }, [])
 
   useEffect(() => {
-    if (transitionLogo !== 'event' || !configuredTransitionLogoSource || typeof Image === 'undefined') return undefined
+    if (transitionLogo !== 'event' || !transitionLogoSource || typeof Image === 'undefined') return undefined
 
     let isCurrent = true
     const image = new Image()
     image.onload = () => {
       if (isCurrent) {
         setTransitionLogoProbe({
-          source: configuredTransitionLogoSource,
+          source: transitionLogoSource,
           shape: getTransitionLogoShape(image.naturalWidth, image.naturalHeight)
         })
       }
     }
-    image.src = configuredTransitionLogoSource
+    image.src = transitionLogoSource
 
     return () => {
       isCurrent = false
     }
-  }, [configuredTransitionLogoSource, transitionLogo])
+  }, [transitionLogoSource, transitionLogo])
 
   useEffect(() => {
-    const activeSceneId = project.scenes.activeSceneId
-    if (previousSceneIdRef.current === activeSceneId) return
+    return () => clearTransitionTimers()
+  }, [clearTransitionTimers])
 
-    previousSceneIdRef.current = activeSceneId
-    setTransitionKey(key => key + 1)
-  }, [project.scenes.activeSceneId])
+  useEffect(() => {
+    const nextSceneId = getProjectSceneId(project)
+    const displayedSceneId = getProjectSceneId(displayProjectRef.current)
+    const pendingSceneId = getProjectSceneId(pendingProjectRef.current)
+
+    if (transitionActiveRef.current && pendingSceneId === nextSceneId) {
+      pendingProjectRef.current = project
+      return
+    }
+
+    clearTransitionTimers()
+
+    if (normalizedTransitionMode === 'none' || displayedSceneId === nextSceneId) {
+      transitionActiveRef.current = false
+      pendingProjectRef.current = null
+      displayProjectRef.current = project
+      setDisplayProject(project)
+      setTransitionState(state => ({
+        ...state,
+        active: false,
+        resolving: false,
+        logoSource: ''
+      }))
+      return
+    }
+
+    transitionActiveRef.current = true
+    pendingProjectRef.current = project
+    setTransitionState(state => ({
+      key: state.key + 1,
+      active: true,
+      resolving: false,
+      logoSource: getTransitionLogoSource(project, transitionLogo)
+    }))
+
+    const swapDelay = getTransitionSwapDelay(normalizedTransitionMode, transitionTiming)
+
+    transitionTimersRef.current.push(window.setTimeout(() => {
+      const nextProject = pendingProjectRef.current || project
+      displayProjectRef.current = nextProject
+      setDisplayProject(nextProject)
+      setTransitionState(state => ({
+        ...state,
+        resolving: true
+      }))
+    }, swapDelay))
+
+    transitionTimersRef.current.push(window.setTimeout(() => {
+      const nextProject = pendingProjectRef.current || project
+      transitionActiveRef.current = false
+      pendingProjectRef.current = null
+      displayProjectRef.current = nextProject
+      setDisplayProject(nextProject)
+      setTransitionState(state => ({
+        ...state,
+        active: false,
+        resolving: false,
+        logoSource: ''
+      }))
+    }, transitionTiming.mask))
+  }, [clearTransitionTimers, normalizedTransitionMode, project, transitionLogo, transitionTiming])
 
   const handleTransitionLogoLoad = event => {
     if (transitionLogo !== 'event') return
     setTransitionLogoProbe({
-      source: configuredTransitionLogoSource,
+      source: transitionLogoSource,
       shape: getTransitionLogoShape(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)
     })
   }
@@ -133,6 +211,7 @@ export default function ProgramPreview({
       <div
         className={bare ? styles.bareCanvas : styles.canvas}
         data-owbt-broadcast-style={broadcastStyle}
+        data-owbt-active-scene={displayProject.scenes.activeSceneId}
         style={{
           '--owbt-scene-resolve-duration': `${transitionTiming.resolve}ms`,
           '--owbt-transition-duration': `${transitionTiming.mask}ms`,
@@ -140,16 +219,16 @@ export default function ProgramPreview({
         }}
       >
         <div
-          key={project.scenes.activeSceneId}
-          className={`${styles.sceneMount} ${shouldAnimateScene ? styles.sceneMountActive : ''}`}
+          key={displayProject.scenes.activeSceneId}
+          className={`${styles.sceneMount} ${shouldResolveScene ? styles.sceneMountActive : ''}`}
         >
-          <SceneComponent project={project} scene={scene} />
+          <SceneComponent project={displayProject} scene={scene} />
         </div>
         {shouldAnimateScene && (
           <div
-            key={transitionKey}
+            key={transitionState.key}
             className={transitionClassName}
-            data-owbt-transition-key={transitionKey}
+            data-owbt-transition-key={transitionState.key}
             aria-hidden="true"
           >
             {transitionLogoSource && shouldShowTransitionLogo && (

@@ -55,6 +55,10 @@
   --legacy-map-format-label-color: rgba(47,59,69,0.58);
   --legacy-map-format-value-color: var(--theme-broadcast-ink);
   --legacy-map-footer-color: rgba(47,59,69,0.58);
+  --legacy-map-dark-text: #ffffff;
+  --legacy-hud-dark-text: #ffffff;
+  --legacy-hud-dark-muted: rgba(255,255,255,0.68);
+  --legacy-hud-dark-faint: rgba(255,255,255,0.24);
   --owcs-logo-swap-filter: brightness(0) saturate(100%) invert(43%) sepia(98%) saturate(2466%) hue-rotate(356deg) brightness(99%) contrast(91%);
   --legacy-scene-bg-image:
     radial-gradient(circle at 18% 22%, rgba(255,255,255,0.96), transparent 34%),
@@ -90,6 +94,13 @@
     linear-gradient(146deg, transparent 0 92%, #f06414 92% 93.1%, transparent 93.1% 100%);
   opacity: 0.96;
   content: '';
+}
+
+.canvas[data-owbt-broadcast-style='owcs'][data-owbt-active-scene='live-hud']::before,
+.canvas[data-owbt-broadcast-style='owcs'][data-owbt-active-scene='live-hud']::after,
+.bareCanvas[data-owbt-broadcast-style='owcs'][data-owbt-active-scene='live-hud']::before,
+.bareCanvas[data-owbt-broadcast-style='owcs'][data-owbt-active-scene='live-hud']::after {
+  content: none;
 }
 
 .bareFrame {
