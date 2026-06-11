@@ -48,6 +48,14 @@
   --legacy-line: var(--theme-broadcast-line);
   --legacy-line-strong: var(--theme-broadcast-line-strong);
   --legacy-shadow: rgba(47,59,69,0.14);
+  --legacy-ui-muted: var(--theme-broadcast-muted);
+  --legacy-ui-ink: var(--theme-broadcast-ink);
+  --legacy-map-tbd-top-color: rgba(47,59,69,0.72);
+  --legacy-map-tbd-title-color: rgba(47,59,69,0.64);
+  --legacy-map-format-label-color: rgba(47,59,69,0.58);
+  --legacy-map-format-value-color: var(--theme-broadcast-ink);
+  --legacy-map-footer-color: rgba(47,59,69,0.58);
+  --owcs-logo-swap-filter: brightness(0) saturate(100%) invert(43%) sepia(98%) saturate(2466%) hue-rotate(356deg) brightness(99%) contrast(91%);
   --legacy-scene-bg-image:
     radial-gradient(circle at 18% 22%, rgba(255,255,255,0.96), transparent 34%),
     linear-gradient(124deg, rgba(47,59,69,0.06) 0 9%, transparent 9% 31%, rgba(47,59,69,0.045) 31% 42%, transparent 42% 100%),

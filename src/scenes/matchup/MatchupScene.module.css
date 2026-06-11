@@ -422,6 +422,12 @@
   color: var(--theme-broadcast-muted);
 }
 
+:global([data-owbt-broadcast-style='owcs']) .teamAccent {
+  width: 4px;
+  background: var(--theme-broadcast-accent);
+  box-shadow: none;
+}
+
 :global([data-owbt-broadcast-style='owcs']) .brandMark,
 :global([data-owbt-broadcast-style='owcs']) .titleBlock h1,
 :global([data-owbt-broadcast-style='owcs']) .teamText h2,

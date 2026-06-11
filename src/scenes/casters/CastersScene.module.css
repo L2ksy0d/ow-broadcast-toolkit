@@ -869,15 +869,31 @@
   box-shadow: var(--theme-broadcast-shadow), inset 0 0 0 1px rgba(255,255,255,0.72);
 }
 
-:global([data-owbt-broadcast-style='owcs']) .casterName,
+:global([data-owbt-broadcast-style='owcs']) .logoMark {
+  border-color: var(--theme-broadcast-accent);
+  background: var(--theme-broadcast-panel-solid);
+  box-shadow: var(--theme-broadcast-shadow);
+  color: var(--theme-broadcast-accent);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .logoMark img {
+  filter: var(--owcs-logo-swap-filter);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .casterInfo strong,
 :global([data-owbt-broadcast-style='owcs']) .brandBlock h1,
 :global([data-owbt-broadcast-style='owcs']) .footer span {
   color: var(--theme-broadcast-ink);
 }
 
 :global([data-owbt-broadcast-style='owcs']) .number,
-:global([data-owbt-broadcast-style='owcs']) .casterRole,
+:global([data-owbt-broadcast-style='owcs']) .casterInfo span,
 :global([data-owbt-broadcast-style='owcs']) .footer strong,
 :global([data-owbt-broadcast-style='owcs']) .interfaceLabel {
   color: var(--theme-broadcast-accent);
+}
+
+:global([data-owbt-broadcast-style='owcs']) .topbar em,
+:global([data-owbt-broadcast-style='owcs']) .casterInfo em {
+  color: var(--theme-broadcast-muted);
 }

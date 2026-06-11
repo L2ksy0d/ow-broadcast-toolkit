@@ -272,7 +272,11 @@ const MapCard = React.memo(({
 
   const frameColor = isNext ? COLORS.yellow : isPlayed ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.10)';
   const topBg = isNext ? COLORS.yellow : 'rgba(255,255,255,0.03)';
-  const topColor = isNext ? COLORS.black : isPlayed ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.60)';
+  const topColor = isNext
+    ? COLORS.black
+    : isPlayed
+      ? 'var(--legacy-map-tbd-top-color, rgba(255,255,255,0.35))'
+      : 'var(--legacy-map-tbd-top-color, rgba(255,255,255,0.60))';
   const bottomBg = isNext ? COLORS.yellow : 'linear-gradient(180deg, rgba(18,18,18,0.98) 0%, rgba(12,12,12,0.98) 100%)';
   const titleColor = isNext ? COLORS.black : isPlayed ? 'rgba(255,255,255,0.42)' : COLORS.white;
 
@@ -479,7 +483,11 @@ const MapCard = React.memo(({
             style={{
               fontSize: '11px',
               fontWeight: '900',
-              color: isNext ? 'rgba(42,42,42,0.70)' : isTBD || !map.name ? '#777' : 'rgba(255,255,255,0.58)',
+              color: isNext
+                ? 'rgba(42,42,42,0.70)'
+                : isTBD || !map.name
+                  ? 'var(--legacy-map-tbd-title-color, #777)'
+                  : 'rgba(255,255,255,0.58)',
               letterSpacing: '2px',
               textTransform: 'uppercase',
               whiteSpace: 'nowrap'
@@ -493,7 +501,7 @@ const MapCard = React.memo(({
           style={{
             fontSize: '24px',
             fontWeight: '900',
-            color: isTBD || !map.name ? '#666' : titleColor,
+            color: isTBD || !map.name ? 'var(--legacy-map-tbd-title-color, #666)' : titleColor,
             textTransform: 'uppercase',
             lineHeight: '1.08',
             letterSpacing: '0.6px',
@@ -609,9 +617,9 @@ export default function MapPoolScene({ matchData = {} }) {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '44px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 30px', boxSizing: 'border-box', backdropFilter: 'blur(4px)', zIndex: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '10px', height: '10px', background: COLORS.yellow, boxShadow: '0 0 12px var(--theme-primary-border)' }} />
-          <span style={{ fontSize: '12px', fontWeight: '900', letterSpacing: '2px', color: COLORS.softWhite }}>{interfaceName}</span>
+          <span style={{ fontSize: '12px', fontWeight: '900', letterSpacing: '2px', color: 'var(--legacy-ui-muted, rgba(255,255,255,0.72))' }}>{interfaceName}</span>
         </div>
-        <div style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '2px', color: 'rgba(255,255,255,0.38)' }}>
+        <div style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '2px', color: 'var(--legacy-ui-muted, rgba(255,255,255,0.38))' }}>
           {displayMode === 'MATCH' ? 'MATCH_SEQUENCE // STABLE' : 'MAP_POOL // STABLE'}
         </div>
       </div>
@@ -628,10 +636,10 @@ export default function MapPoolScene({ matchData = {} }) {
 
       {displayMode === 'MATCH' && (
         <div style={{ position: 'absolute', top: '60px', right: '80px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', animation: 'slideUpBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards', opacity: 0, zIndex: 10 }}>
-          <div style={{ fontSize: '12px', fontWeight: '900', color: 'rgba(255,255,255,0.62)', letterSpacing: '2px', marginBottom: '8px', textTransform: 'uppercase' }}>MATCH FORMAT</div>
+          <div style={{ fontSize: '12px', fontWeight: '900', color: 'var(--legacy-map-format-label-color, rgba(255,255,255,0.62))', letterSpacing: '2px', marginBottom: '8px', textTransform: 'uppercase' }}>MATCH FORMAT</div>
           <div style={{ background: 'rgba(255,255,255,0.04)', border: UI.outerFrame, boxShadow: `${UI.panelShadow}, ${UI.insetLine}`, padding: '10px 18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: '10px', height: '10px', background: COLORS.yellow }} />
-            <span style={{ color: COLORS.white, fontSize: '30px', fontWeight: '900', letterSpacing: '2px' }}>{matchData.matchFormat}</span>
+            <span style={{ color: 'var(--legacy-map-format-value-color, #ffffff)', fontSize: '30px', fontWeight: '900', letterSpacing: '2px' }}>{matchData.matchFormat}</span>
           </div>
         </div>
       )}
@@ -703,7 +711,7 @@ export default function MapPoolScene({ matchData = {} }) {
       )}
 
       <div style={{ position: 'absolute', bottom: '80px', left: '80px', width: 'calc(100% - 160px)', height: '2px', backgroundColor: 'rgba(255,255,255,0.08)' }} />
-      <div style={{ position: 'absolute', bottom: '60px', left: '80px', color: 'rgba(255,255,255,0.26)', fontSize: '11px', fontWeight: '900', letterSpacing: '1.8px', textTransform: 'uppercase' }}>MATCH_SEQUENCE_SYS // {eventName}.BROADCAST</div>
+      <div style={{ position: 'absolute', bottom: '60px', left: '80px', color: 'var(--legacy-map-footer-color, rgba(255,255,255,0.26))', fontSize: '11px', fontWeight: '900', letterSpacing: '1.8px', textTransform: 'uppercase' }}>MATCH_SEQUENCE_SYS // {eventName}.BROADCAST</div>
     </div>
   );
 }
