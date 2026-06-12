@@ -5,6 +5,7 @@ const COLORS = {
   yellow: 'var(--theme-primary)',
   white: 'var(--legacy-white, #ffffff)',
   mapDarkText: 'var(--legacy-map-dark-text, #ffffff)',
+  accentText: 'var(--legacy-accent-text, #050505)',
   darkGray: 'var(--legacy-deep-black, #1a1a1a)',
   dimGray: 'var(--legacy-dim-gray, #555555)',
   panel: 'var(--legacy-panel, #101010)',
@@ -196,7 +197,7 @@ const BanChip = React.memo(({ orderLabel, hero, role, tag, align = 'left' }) => 
             height: '18px',
             padding: '0 5px',
             background: COLORS.yellow,
-            color: COLORS.black,
+            color: COLORS.accentText,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -274,10 +275,10 @@ const MapCard = React.memo(({
   const frameColor = isNext ? COLORS.yellow : isPlayed ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.10)';
   const topBg = isNext ? COLORS.yellow : 'rgba(255,255,255,0.03)';
   const topColor = isNext
-    ? COLORS.black
+    ? COLORS.accentText
     : COLORS.mapDarkText;
   const bottomBg = isNext ? COLORS.yellow : 'linear-gradient(180deg, rgba(18,18,18,0.98) 0%, rgba(12,12,12,0.98) 100%)';
-  const titleColor = isNext ? COLORS.black : COLORS.mapDarkText;
+  const titleColor = isNext ? COLORS.accentText : COLORS.mapDarkText;
 
   const banA = getMapBanSource(map, matchData, 'A');
   const banB = getMapBanSource(map, matchData, 'B');
@@ -477,7 +478,7 @@ const MapCard = React.memo(({
         {!isNext && <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 22px)', pointerEvents: 'none', opacity: 0.5 }} />}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', position: 'relative', zIndex: 1 }}>
-          <div style={{ width: '8px', height: '8px', backgroundColor: isNext ? COLORS.black : isTBD || !map.name ? '#444' : COLORS.yellow, flexShrink: 0 }} />
+          <div style={{ width: '8px', height: '8px', backgroundColor: isNext ? COLORS.accentText : isTBD || !map.name ? '#444' : COLORS.yellow, flexShrink: 0 }} />
           <span
             style={{
               fontSize: '11px',
@@ -518,7 +519,7 @@ const OverviewMapCard = React.memo(({ type, name, image, delay, isPlayed, isCurr
   const imgPath = image || getMapImagePath(type, name);
   const borderColor = isCurrent ? COLORS.white : isPlayed ? 'rgba(255,255,255,0.12)' : COLORS.yellow;
   const bgBarColor = isCurrent ? COLORS.yellow : 'rgba(10,10,10,0.90)';
-  const textColor = isCurrent ? COLORS.black : COLORS.mapDarkText;
+  const textColor = isCurrent ? COLORS.accentText : COLORS.mapDarkText;
 
   return (
     <div
@@ -544,7 +545,7 @@ const OverviewMapCard = React.memo(({ type, name, image, delay, isPlayed, isCurr
       <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', backgroundColor: bgBarColor, borderTop: `2px solid ${borderColor}`, padding: '10px 14px', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ color: textColor, fontWeight: '900', fontSize: '14px', letterSpacing: '1.6px', textTransform: 'uppercase', textDecoration: isPlayed ? 'line-through' : 'none' }}>{name}</span>
         {isPlayed && <span style={{ color: COLORS.mapDarkText, fontSize: '10px', fontWeight: '900', letterSpacing: '1.2px', textTransform: 'uppercase' }}>PLAYED</span>}
-        {isCurrent && <span style={{ color: COLORS.black, fontSize: '11px', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>CURRENT</span>}
+        {isCurrent && <span style={{ color: COLORS.accentText, fontSize: '11px', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>CURRENT</span>}
       </div>
     </div>
   );

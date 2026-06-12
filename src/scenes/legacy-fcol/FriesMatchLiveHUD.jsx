@@ -13,6 +13,8 @@ const COLORS = {
   hudDarkText: 'var(--legacy-hud-dark-text, #ffffff)',
   hudDarkMuted: 'var(--legacy-hud-dark-muted, rgba(255,255,255,0.68))',
   hudDarkFaint: 'var(--legacy-hud-dark-faint, rgba(255,255,255,0.24))',
+  hudPanelText: 'var(--legacy-hud-panel-text, var(--legacy-hud-dark-text, #ffffff))',
+  accentText: 'var(--legacy-accent-text, #2A2A2A)',
   black: 'var(--legacy-main-dark, #2A2A2A)',
   banRed: '#ff4d4d',
   gray: 'var(--legacy-soft-white, #aaaaaa)',
@@ -43,7 +45,7 @@ const infoBarStyle = {
   left: '50%',
   transform: 'translateX(-50%)',
   backgroundColor: COLORS.mainDark,
-  color: COLORS.hudDarkText,
+  color: COLORS.hudPanelText,
   padding: '5px 15px',
   fontSize: '14px',
   fontWeight: '900',
@@ -149,7 +151,7 @@ const teamNameBlockStyle = {
   minWidth: 0,
   height: '45px',
   backgroundColor: COLORS.mainDark,
-  color: COLORS.hudDarkText,
+  color: COLORS.hudPanelText,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -247,7 +249,7 @@ const scoreBoxStyle = {
   width: '45px',
   height: '45px',
   backgroundColor: COLORS.yellow,
-  color: COLORS.black,
+  color: COLORS.accentText,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -276,7 +278,7 @@ const playerSlotStyle = {
 const subBadgeStyle = {
   fontSize: '9px',
   backgroundColor: COLORS.yellow,
-  color: COLORS.black,
+  color: COLORS.accentText,
   padding: '1px 3px',
   marginRight: '4px',
   borderRadius: '2px',
@@ -317,7 +319,7 @@ const banLabelStyle = {
   alignItems: 'center',
   fontSize: '9px',
   fontWeight: '900',
-  color: COLORS.black,
+  color: COLORS.accentText,
   padding: '4px 0',
   boxSizing: 'border-box'
 };
@@ -443,7 +445,7 @@ const KeyPlayerCard = React.memo(({ show, phase, data, matchData }) => {
         <div style={{ position: 'absolute', top: 0, bottom: 0, [isLeft ? 'left' : 'right']: 0, width: '64%', clipPath: isLeft ? 'polygon(0 0, 74% 0, 64% 100%, 0 100%)' : 'polygon(26% 0, 100% 0, 100% 100%, 36% 100%)', borderRight: isLeft ? `2px solid ${COLORS.yellow}` : 'none', borderLeft: !isLeft ? `2px solid ${COLORS.yellow}` : 'none', opacity: 0.95 }} />
 
         <div style={{ position: 'absolute', [isLeft ? 'left' : 'right']: '52px', top: '52px', zIndex: 6, display: 'grid', gap: '12px', justifyItems: isLeft ? 'start' : 'end', maxWidth: '500px' }}>
-          <div style={{ background: COLORS.yellow, color: COLORS.black, padding: '8px 14px', fontSize: '13px', fontWeight: '900', letterSpacing: '2.2px', textTransform: 'uppercase', boxShadow: '0 10px 18px rgba(0,0,0,0.24)' }}>KEY PLAYER</div>
+          <div style={{ background: COLORS.yellow, color: COLORS.accentText, padding: '8px 14px', fontSize: '13px', fontWeight: '900', letterSpacing: '2.2px', textTransform: 'uppercase', boxShadow: '0 10px 18px rgba(0,0,0,0.24)' }}>KEY PLAYER</div>
           <div style={{ position: 'relative', color: COLORS.white, fontSize: '65px', fontWeight: '900', lineHeight: 0.88, letterSpacing: '1px', textTransform: 'uppercase', textAlign: isLeft ? 'left' : 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 12px 28px rgba(0,0,0,0.40)' }}>
             {data.name || 'PLAYER'}
             <div style={{ position: 'absolute', top: '8px', [isLeft ? 'left' : 'right']: '6px', color: 'rgba(255,255,255,0.05)', fontSize: '118px', fontWeight: '900', lineHeight: 0.9, letterSpacing: '1px', pointerEvents: 'none' }}>
@@ -888,7 +890,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
             <div
               style={{
                 backgroundColor: COLORS.mainDark,
-                color: COLORS.hudDarkText,
+                color: COLORS.hudPanelText,
                 padding: '0 20px',
                 minWidth: '92px',
                 maxWidth: '360px',
@@ -916,7 +918,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
             <div
               style={{
                 backgroundColor: COLORS.yellow,
-                color: COLORS.mainDark,
+                color: COLORS.accentText,
                 padding: '0 16px',
                 fontSize: '13px',
                 fontWeight: '900',
@@ -1125,7 +1127,7 @@ export default function MatchLiveHUD({ matchData, isActive = false }) {
               onAnimationEnd={handleTickerEnd}
               style={{
                 whiteSpace: 'nowrap',
-                color: COLORS.black,
+                color: COLORS.accentText,
                 fontSize: '16px',
                 fontWeight: '900',
                 letterSpacing: '1.8px',

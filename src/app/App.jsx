@@ -59,6 +59,30 @@ const prepareCountdownForTake = (project, now = Date.now()) => {
   return { touched: true, targetTimestamp: countdown.targetTimestamp }
 }
 
+let sceneTransitionSequence = 0
+
+const createSceneTransitionState = ({
+  settings,
+  fromSceneId,
+  toSceneId,
+  reason = 'take',
+  now = Date.now()
+}) => {
+  const normalized = normalizeSceneTransitionSettings(settings)
+  sceneTransitionSequence += 1
+
+  return {
+    id: `${now}-${sceneTransitionSequence}`,
+    reason,
+    fromSceneId: fromSceneId || '',
+    toSceneId: toSceneId || '',
+    mode: normalized.sceneTransitionMode,
+    speed: normalized.sceneTransitionSpeed,
+    logo: normalized.sceneTransitionLogo,
+    startedAt: now
+  }
+}
+
 const PROJECT_SYNC_DEBOUNCE_MS = 180
 const HOTKEY_COMMANDS = [
   { id: 'take', defaultKeys: 'Ctrl Alt T', labelKey: 'hotkeyTake' },
@@ -601,11 +625,19 @@ function ConsoleApp() {
   }
 
   const autoTakeProgramScene = scene => {
+    const transition = createSceneTransitionState({
+      settings: consoleSettings,
+      fromSceneId: programProjectRef.current?.scenes?.activeSceneId,
+      toSceneId: scene.id,
+      reason: 'auto-take'
+    })
+
     setProgramProject(prev => ({
       ...prev,
       scenes: {
         ...prev.scenes,
-        activeSceneId: scene.id
+        activeSceneId: scene.id,
+        transition
       }
     }))
     setPreviewSceneId('live-hud')
@@ -614,8 +646,20 @@ function ConsoleApp() {
 
   const takePreviewToProgram = () => {
     pushUndoSnapshot('TAKE')
+    const fromSceneId = programProjectRef.current?.scenes?.activeSceneId || ''
     const nextProgramProject = structuredClone(previewProject)
-    const countdownTakeState = prepareCountdownForTake(nextProgramProject)
+    const transition = createSceneTransitionState({
+      settings: consoleSettings,
+      fromSceneId,
+      toSceneId: nextProgramProject.scenes?.activeSceneId,
+      reason: 'take'
+    })
+
+    nextProgramProject.scenes = {
+      ...nextProgramProject.scenes,
+      transition
+    }
+    const countdownTakeState = prepareCountdownForTake(nextProgramProject, transition.startedAt)
 
     setProgramProject(nextProgramProject)
 

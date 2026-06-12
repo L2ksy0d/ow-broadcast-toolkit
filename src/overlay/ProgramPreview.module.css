@@ -59,6 +59,8 @@
   --legacy-hud-dark-text: #ffffff;
   --legacy-hud-dark-muted: rgba(255,255,255,0.68);
   --legacy-hud-dark-faint: rgba(255,255,255,0.24);
+  --legacy-hud-panel-text: var(--theme-broadcast-ink);
+  --legacy-accent-text: var(--theme-broadcast-ink);
   --owcs-logo-swap-filter: brightness(0) saturate(100%) invert(43%) sepia(98%) saturate(2466%) hue-rotate(356deg) brightness(99%) contrast(91%);
   --legacy-scene-bg-image:
     radial-gradient(circle at 18% 22%, rgba(255,255,255,0.96), transparent 34%),

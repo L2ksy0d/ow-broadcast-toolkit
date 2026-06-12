@@ -1,0 +1,85 @@
+本次未提交变更说明
+
+建议 commit 标题：
+fix: restore TAKE transition event sync and improve OWCS white-theme contrast
+
+本说明记录创建前工作区中的未提交代码变更，不包含本 commit_log 文件自身。
+
+1. 修复 TAKE 转场触发不稳定
+
+问题：
+- 控制台点击 TAKE 后，部分场景/子项会直接硬切，缺少此前的线条遮罩过渡动画。
+- 原有 ProgramPreview 的触发条件主要依赖 displayedSceneId 和 nextSceneId 是否不同。
+- 如果 Program 状态在渲染前已经同步到同一个 activeSceneId，ProgramPreview 会判断为“同场景更新”，直接跳过转场。
+- overlay URL 也主要依赖自身 localStorage 中的转场偏好，TAKE 本身没有携带独立的转场事件与当次转场配置。
+
+排查结论：
+- 线条转场 CSS 和 ProgramPreview 的基本动画状态机仍存在。
+- 当前缺口是 TAKE 没有向 programProject 写入一个稳定、可被渲染端识别的“本次 TAKE 事件”。
+- 因此只靠 activeSceneId 变化触发动画不够稳，尤其是在场景状态已经提前同步或同场景重复 TAKE 时。
+
+修复方案：
+- src/app/App.jsx
+  - 新增 createSceneTransitionState，用于为每次 TAKE / auto-take 生成 scenes.transition。
+  - transition 内包含 id、reason、fromSceneId、toSceneId、mode、speed、logo、startedAt。
+  - takePreviewToProgram 写入新的 transition 事件后再 setProgramProject。
+  - autoTakeProgramScene 也同步写入 transition 事件，避免自动切输出时硬切。
+  - 倒计时 TAKE 复用 transition.startedAt，保证倒计时启动时间与 TAKE 事件时间一致。
+
+- src/overlay/ProgramPreview.jsx
+  - 新增 getProjectTransitionId 和 lastTransitionIdRef。
+  - ProgramPreview 不再只依赖 activeSceneId 是否变化；当 scenes.transition.id 变化时，也会触发遮罩动画。
+  - 如果当前正在转场且 pendingSceneId 相同，只有在没有新 transition id 时才合并更新，避免新的 TAKE 事件被吞掉。
+  - 当转场模式为 none 时仍保持直接切换。
+
+- src/overlay/OverlayPage.jsx
+  - overlay 输出页读取 project.scenes.transition 中随 TAKE 携带的 mode / speed / logo。
+  - 输出页优先使用 TAKE 事件中的转场配置，再回退到本地 console settings。
+  - 保证控制台 Program 监看和独立 overlay URL 的转场配置来源一致。
+
+预期效果：
+- 流程包装、媒体播放、中场控制、数据中心等所有通过 TAKE 切到 Program 的子场景，都会重新获得全局线条转场。
+- 即使某些状态路径下 activeSceneId 已经提前一致，只要 TAKE 事件 id 是新的，也会播放转场动画。
+- 转场速度、转场模式和 logo 选择会随 TAKE 同步到输出端。
+
+2. 修复 OWCS 白色主题下文字与背景对比度问题
+
+问题：
+- OWCS 白橙主题中，部分实况直播 HUD 的文字仍沿用旧深色主题变量。
+- 左右队伍名称和顶部赛事信息位于白色或浅色区域时，白字会与背景接近，导致看不清。
+- 地图设置/地图池中，当前地图、禁用标签、TBD/深色区域文本存在深浅对比不稳定的问题。
+
+修复方案：
+- src/overlay/ProgramPreview.module.css
+  - 在 OWCS 主题变量中增加：
+    - --legacy-hud-panel-text: var(--theme-broadcast-ink)
+    - --legacy-accent-text: var(--theme-broadcast-ink)
+  - 让旧版 legacy 场景可以按当前主题读取更合适的深色文字变量。
+
+- src/scenes/legacy-fcol/FriesMatchLiveHUD.jsx
+  - 新增 COLORS.hudPanelText 和 COLORS.accentText。
+  - 队伍名称栏、顶部信息栏等深/浅主题敏感位置改用 hudPanelText。
+  - 黄色强调块上的文字从旧的 black/mainDark 改为 accentText。
+  - 覆盖内容包括比分框、替补标记、禁用标签、KEY PLAYER 标签、顶部赛制标签和 ticker 文本。
+
+- src/scenes/legacy-fcol/FriesMapPoolScene.jsx
+  - 新增 COLORS.accentText。
+  - 地图池中黄色当前状态条、当前地图文字、CURRENT 标签和当前地图标记统一改用 accentText。
+  - 保持深色背景区域继续使用 mapDarkText，避免白橙主题下出现同色或低对比文本。
+
+预期效果：
+- OWCS 白色主题下，直播实况左右队伍名和顶部赛事名不再出现白底白字。
+- 黄色强调块上的文字与主题深色文字保持一致。
+- 地图设置/地图池的当前地图与深色区域文本对比度更稳定。
+
+验证：
+- npm.cmd run check 通过。
+- git diff --check 通过。
+
+当前涉及文件：
+- src/app/App.jsx
+- src/overlay/OverlayPage.jsx
+- src/overlay/ProgramPreview.jsx
+- src/overlay/ProgramPreview.module.css
+- src/scenes/legacy-fcol/FriesMapPoolScene.jsx
+- src/scenes/legacy-fcol/FriesMatchLiveHUD.jsx

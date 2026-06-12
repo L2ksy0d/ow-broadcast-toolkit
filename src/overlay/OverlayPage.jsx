@@ -3,7 +3,7 @@ import { loadStoredProgramProject, readStoredProgramProjectRaw } from '../projec
 import { safeParseProject } from '../project/projectUtils'
 import { subscribeProgramState } from '../project/projectSync'
 import { applyThemeTokens } from '../theme/themeTokens'
-import { loadSceneTransitionSettings } from '../app/consolePreferences'
+import { loadSceneTransitionSettings, normalizeSceneTransitionSettings } from '../app/consolePreferences'
 import ProgramPreview from './ProgramPreview'
 import styles from './OverlayPage.module.css'
 
@@ -58,14 +58,22 @@ export default function OverlayPage() {
     }
   }, [applyRawProject])
 
+  const projectTransition = project?.scenes?.transition || {}
+  const effectiveTransitionSettings = normalizeSceneTransitionSettings({
+    ...transitionSettings,
+    sceneTransitionMode: projectTransition.mode || transitionSettings.sceneTransitionMode,
+    sceneTransitionSpeed: projectTransition.speed || transitionSettings.sceneTransitionSpeed,
+    sceneTransitionLogo: projectTransition.logo || transitionSettings.sceneTransitionLogo
+  })
+
   return (
     <main className={styles.overlay}>
       <ProgramPreview
         project={project}
         bare
-        transitionMode={transitionSettings.sceneTransitionMode}
-        transitionSpeed={transitionSettings.sceneTransitionSpeed}
-        transitionLogo={transitionSettings.sceneTransitionLogo}
+        transitionMode={effectiveTransitionSettings.sceneTransitionMode}
+        transitionSpeed={effectiveTransitionSettings.sceneTransitionSpeed}
+        transitionLogo={effectiveTransitionSettings.sceneTransitionLogo}
       />
     </main>
   )

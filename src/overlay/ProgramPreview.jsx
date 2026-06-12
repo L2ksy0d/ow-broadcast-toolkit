@@ -26,6 +26,8 @@ const normalizeTransitionMode = mode => {
 
 const getProjectSceneId = project => project?.scenes?.activeSceneId || ''
 
+const getProjectTransitionId = project => clean(project?.scenes?.transition?.id)
+
 const getTransitionSwapDelay = (mode, timing) => {
   const ratio = mode === 'simple' ? 0.34 : 0.42
   return Math.max(0, Math.min(timing.mask - 80, Math.round(timing.mask * ratio)))
@@ -54,6 +56,7 @@ export default function ProgramPreview({
   const displayProjectRef = useRef(project)
   const pendingProjectRef = useRef(null)
   const transitionActiveRef = useRef(false)
+  const lastTransitionIdRef = useRef(getProjectTransitionId(project))
   const transitionTimersRef = useRef([])
   const [scale, setScale] = useState(1)
   const [displayProject, setDisplayProject] = useState(project)
@@ -140,15 +143,18 @@ export default function ProgramPreview({
     const nextSceneId = getProjectSceneId(project)
     const displayedSceneId = getProjectSceneId(displayProjectRef.current)
     const pendingSceneId = getProjectSceneId(pendingProjectRef.current)
+    const nextTransitionId = getProjectTransitionId(project)
+    const hasNewTransitionEvent = Boolean(nextTransitionId && nextTransitionId !== lastTransitionIdRef.current)
 
-    if (transitionActiveRef.current && pendingSceneId === nextSceneId) {
+    if (transitionActiveRef.current && pendingSceneId === nextSceneId && !hasNewTransitionEvent) {
       pendingProjectRef.current = project
       return
     }
 
     clearTransitionTimers()
+    if (nextTransitionId) lastTransitionIdRef.current = nextTransitionId
 
-    if (normalizedTransitionMode === 'none' || displayedSceneId === nextSceneId) {
+    if (normalizedTransitionMode === 'none' || (displayedSceneId === nextSceneId && !hasNewTransitionEvent)) {
       transitionActiveRef.current = false
       pendingProjectRef.current = null
       displayProjectRef.current = project
