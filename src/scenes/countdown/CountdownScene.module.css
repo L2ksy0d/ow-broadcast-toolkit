@@ -743,7 +743,7 @@
   font-size: 40px;
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.02;
+  line-height: 1.12;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -952,6 +952,7 @@
   font-size: 24px;
   font-weight: 950;
   letter-spacing: 0;
+  line-height: 1.12;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;

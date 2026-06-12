@@ -224,7 +224,7 @@ export default function ResultScene({ project }) {
                 style={{ width: '78%', height: '78%', objectFit: 'contain', display: 'block' }}
               />
             </div>
-            <div style={{ position: 'relative', zIndex: 2, maxWidth: '100%', fontSize: 56, fontWeight: 950, color: '#fff', lineHeight: 1.02, letterSpacing: 0.6, textTransform: 'uppercase', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 4px 18px rgba(0,0,0,0.25)', opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 600ms forwards' }}>
+            <div style={{ position: 'relative', zIndex: 2, maxWidth: '100%', fontSize: 56, fontWeight: 950, color: '#fff', lineHeight: 1.12, letterSpacing: 0.6, textTransform: 'uppercase', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 4px 18px rgba(0,0,0,0.25)', opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 600ms forwards' }}>
               {winnerName}
             </div>
             <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: 10, marginTop: 2, opacity: 0, animation: 'owbtWinnerTextUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 700ms forwards' }}>
