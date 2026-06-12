@@ -700,8 +700,10 @@
   width: 650px;
   overflow: hidden;
   border: 2px solid var(--theme-primary);
-  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.42));
-  box-shadow: var(--theme-shadow-primary-strong), 0 24px 64px rgba(0,0,0,0.36);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.9), rgba(229,233,236,0.56)),
+    var(--theme-broadcast-panel, rgba(255,255,255,0.82));
+  box-shadow: var(--theme-broadcast-shadow, var(--theme-shadow-primary-strong)), inset 0 0 0 1px rgba(255,255,255,0.72);
 }
 
 .scheduleSingleFeatured .scheduleSingleCard {
@@ -715,8 +717,8 @@
   left: 0;
   z-index: 1;
   height: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 20px);
+  border-bottom: 1px solid rgba(47,59,69,0.1);
+  background: repeating-linear-gradient(90deg, rgba(47,59,69,0.04) 0 1px, transparent 1px 20px);
   content: '';
   pointer-events: none;
 }
@@ -727,8 +729,8 @@
   align-items: center;
   min-height: 164px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.24)),
-    var(--schedule-logo-bg);
+    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(229,233,236,0.58)),
+    linear-gradient(90deg, color-mix(in srgb, var(--schedule-logo-bg) 10%, transparent), transparent 34%);
 }
 
 .scheduleSingleFeatured .scheduleSingleTeam {
@@ -739,11 +741,11 @@
 .scheduleSingleTeam strong {
   overflow: hidden;
   padding: 0 34px;
-  color: var(--schedule-team-text);
+  color: var(--theme-text);
   font-size: 40px;
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.02;
+  line-height: 1.12;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -762,8 +764,10 @@
   min-height: 76px;
   place-items: center;
   overflow: hidden;
-  border-right: 1px solid rgba(0,0,0,0.16);
-  background: rgba(0,0,0,0.12);
+  border-right: 1px solid rgba(47,59,69,0.12);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.46)),
+    color-mix(in srgb, var(--schedule-logo-bg) 8%, transparent);
   box-sizing: border-box;
   padding: 22px;
 }
@@ -771,7 +775,7 @@
 .scheduleLogoCell::before {
   position: absolute;
   inset: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(47,59,69,0.12);
   content: '';
   pointer-events: none;
 }
@@ -800,8 +804,8 @@
   justify-content: center;
   gap: 18px;
   min-height: 68px;
-  border-top: 2px solid #050505;
-  border-bottom: 2px solid #050505;
+  border-top: 2px solid rgba(47,59,69,0.12);
+  border-bottom: 2px solid rgba(47,59,69,0.12);
   background: var(--theme-primary);
   color: #050505;
 }
@@ -890,14 +894,16 @@
   min-height: 94px;
   overflow: hidden;
   border: 2px solid var(--theme-primary);
-  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.42));
-  box-shadow: var(--theme-shadow-primary), 0 12px 34px rgba(0,0,0,0.3);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.9), rgba(229,233,236,0.54)),
+    var(--theme-broadcast-panel, rgba(255,255,255,0.82));
+  box-shadow: var(--theme-broadcast-shadow, var(--theme-shadow-primary)), inset 0 0 0 1px rgba(255,255,255,0.72);
 }
 
 .scheduleItemRow::before {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 24px);
+  background: repeating-linear-gradient(90deg, rgba(47,59,69,0.04) 0 1px, transparent 1px 24px);
   content: '';
   opacity: 0.5;
   pointer-events: none;
@@ -946,12 +952,15 @@
   align-items: center;
   min-width: 0;
   overflow: hidden;
-  background: rgba(0,0,0,0.42);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.78), rgba(229,233,236,0.36)),
+    color-mix(in srgb, var(--schedule-logo-bg, #f2f4f5) 7%, transparent);
   color: var(--theme-text);
   padding: 0 14px;
   font-size: 24px;
   font-weight: 950;
   letter-spacing: 0;
+  line-height: 1.12;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -975,7 +984,9 @@
 .scheduleMiniLogo {
   --schedule-logo-bg: #101010;
   min-width: 0;
-  background: var(--schedule-logo-bg);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.84), rgba(229,233,236,0.46)),
+    color-mix(in srgb, var(--schedule-logo-bg) 8%, transparent);
 }
 
 .scheduleMiniLogo .scheduleLogoCell {
@@ -998,8 +1009,8 @@
   align-items: center;
   justify-content: center;
   width: 68px;
-  border-right: 2px solid #050505;
-  border-left: 2px solid #050505;
+  border-right: 2px solid rgba(47,59,69,0.12);
+  border-left: 2px solid rgba(47,59,69,0.12);
   background: var(--theme-primary);
   color: #050505;
 }

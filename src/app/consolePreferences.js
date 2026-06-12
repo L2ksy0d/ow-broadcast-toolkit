@@ -2,7 +2,7 @@ export const CONSOLE_SETTINGS_STORAGE_KEY = 'owbt-console-settings-v1'
 
 export const DEFAULT_SCENE_TRANSITION_SETTINGS = {
   sceneTransitionMode: 'scan',
-  sceneTransitionSpeed: 'normal',
+  sceneTransitionSpeed: 'slow',
   sceneTransitionLogo: 'off'
 }
 

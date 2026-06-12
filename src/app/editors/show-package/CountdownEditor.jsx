@@ -57,6 +57,17 @@ const getDisplayNameFromPath = path => {
   return withoutQuery.split(/[\\/]/).filter(Boolean).pop() || ''
 }
 
+const getSafeCountdownDuration = (minutes, seconds) => {
+  const safeMinutes = Math.max(0, Number(minutes) || 0)
+  const safeSeconds = Math.max(0, Math.min(59, Number(seconds) || 0))
+
+  return {
+    safeMinutes,
+    safeSeconds,
+    totalSeconds: safeMinutes * 60 + safeSeconds
+  }
+}
+
 function CountdownEditor({ project, text, language, onUpdateProject }) {
   const countdownText = getCountdownEditorCopy(language)
   const settings = getSceneSettings(project, 'countdown')
@@ -131,19 +142,42 @@ function CountdownEditor({ project, text, language, onUpdateProject }) {
     })
   }
 
+  const queueCountdownTimeForTake = (minutes, seconds) => {
+    const { totalSeconds } = getSafeCountdownDuration(minutes, seconds)
+
+    onUpdateProject(draft => {
+      const countdown = ensureSceneSettings(draft, 'countdown')
+      countdown.durationSeconds = totalSeconds
+      countdown.targetTimestamp = 0
+      countdown.startCountdownOnTake = totalSeconds > 0
+    })
+  }
+
+  const updateCountdownMinutes = value => {
+    setLocalMinutes(value)
+    queueCountdownTimeForTake(value, localSeconds)
+  }
+
+  const updateCountdownSeconds = value => {
+    setLocalSeconds(value)
+    queueCountdownTimeForTake(localMinutes, value)
+  }
+
   const applyCountdownTime = () => {
-    const safeMinutes = Math.max(0, Number(localMinutes) || 0)
-    const safeSeconds = Math.max(0, Math.min(59, Number(localSeconds) || 0))
-    const totalSeconds = safeMinutes * 60 + safeSeconds
+    const { totalSeconds } = getSafeCountdownDuration(localMinutes, localSeconds)
 
     onUpdateProject(draft => {
       const countdown = ensureSceneSettings(draft, 'countdown')
       countdown.durationSeconds = totalSeconds
       countdown.targetTimestamp = Date.now() + totalSeconds * 1000
+      countdown.startCountdownOnTake = false
     })
   }
 
-  const stopTimer = () => updateSetting({ targetTimestamp: 0 })
+  const stopTimer = () => updateSetting({
+    targetTimestamp: 0,
+    startCountdownOnTake: false
+  })
 
   const updateEventName = field => value => {
     const settingsField = field === 'nameZh' ? 'competitionNameZh' : 'competitionNameEn'
@@ -244,7 +278,7 @@ function CountdownEditor({ project, text, language, onUpdateProject }) {
                   type="number"
                   min="0"
                   value={localMinutes}
-                  onChange={event => setLocalMinutes(event.target.value)}
+                  onChange={event => updateCountdownMinutes(event.target.value)}
                 />
               </Field>
 
@@ -254,7 +288,7 @@ function CountdownEditor({ project, text, language, onUpdateProject }) {
                   min="0"
                   max="59"
                   value={localSeconds}
-                  onChange={event => setLocalSeconds(event.target.value)}
+                  onChange={event => updateCountdownSeconds(event.target.value)}
                 />
               </Field>
 

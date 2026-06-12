@@ -151,6 +151,7 @@ export const createDefaultSceneSettings = () => ({
     finishedText: 'READY',
     durationSeconds: 600,
     targetTimestamp: 0,
+    startCountdownOnTake: false,
     showEventLogo: true,
     showEventName: true,
     showStatus: true,

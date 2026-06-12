@@ -36,6 +36,29 @@ const updateNested = (project, updater) => {
   return next
 }
 
+const prepareCountdownForTake = (project, now = Date.now()) => {
+  const countdown = project?.scenes?.settings?.countdown
+  if (project?.scenes?.activeSceneId !== 'countdown' || !countdown) {
+    return { touched: false, targetTimestamp: 0 }
+  }
+
+  if (countdown.displayMode === 'standby' || countdown.startCountdownOnTake !== true) {
+    return { touched: false, targetTimestamp: 0 }
+  }
+
+  const durationSeconds = Math.max(0, Number(countdown.durationSeconds) || 0)
+  const currentTarget = Number(countdown.targetTimestamp) || 0
+
+  countdown.startCountdownOnTake = false
+
+  if (durationSeconds <= 0 || currentTarget > 0) {
+    return { touched: true, targetTimestamp: 0 }
+  }
+
+  countdown.targetTimestamp = now + durationSeconds * 1000
+  return { touched: true, targetTimestamp: countdown.targetTimestamp }
+}
+
 const PROJECT_SYNC_DEBOUNCE_MS = 180
 const HOTKEY_COMMANDS = [
   { id: 'take', defaultKeys: 'Ctrl Alt T', labelKey: 'hotkeyTake' },
@@ -591,7 +614,23 @@ function ConsoleApp() {
 
   const takePreviewToProgram = () => {
     pushUndoSnapshot('TAKE')
-    setProgramProject(structuredClone(previewProject))
+    const nextProgramProject = structuredClone(previewProject)
+    const countdownTakeState = prepareCountdownForTake(nextProgramProject)
+
+    setProgramProject(nextProgramProject)
+
+    if (countdownTakeState.touched) {
+      setProject(prev => updateNested(prev, draft => {
+        const countdown = draft?.scenes?.settings?.countdown
+        if (!countdown) return
+
+        countdown.startCountdownOnTake = false
+        if (countdownTakeState.targetTimestamp > 0) {
+          countdown.targetTimestamp = countdownTakeState.targetTimestamp
+        }
+      }))
+    }
+
     pushLog(copy.logTake(getSceneName(previewScene, language)))
   }
 

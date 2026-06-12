@@ -47,7 +47,7 @@ export default function ProgramPreview({
   project,
   bare = false,
   transitionMode = 'scan',
-  transitionSpeed = 'normal',
+  transitionSpeed = 'slow',
   transitionLogo = 'off'
 }) {
   const frameRef = useRef(null)
@@ -68,7 +68,7 @@ export default function ProgramPreview({
   const SceneComponent = scene.component
   const broadcastStyle = getBroadcastStyle(displayProject)
   const normalizedTransitionMode = normalizeTransitionMode(transitionMode)
-  const transitionTiming = TRANSITION_SPEEDS[transitionSpeed] || TRANSITION_SPEEDS.normal
+  const transitionTiming = TRANSITION_SPEEDS[transitionSpeed] || TRANSITION_SPEEDS.slow
   const shouldAnimateScene = transitionState.active && normalizedTransitionMode !== 'none'
   const shouldResolveScene = transitionState.resolving && normalizedTransitionMode !== 'none'
   const shouldShowTransitionLogo = shouldAnimateScene && normalizedTransitionMode !== 'simple'
