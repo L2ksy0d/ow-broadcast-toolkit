@@ -1,0 +1,76 @@
+本次修改集中修复了四类播出包装问题：
+
+1. TAKE 切场过场动画默认速度不符合预期
+
+问题：
+- 点击 TAKE 切换场景时，默认过场遮罩仍使用 normal 节奏，遮罩时长偏短。
+
+原因：
+- src/app/consolePreferences.js 默认 sceneTransitionSpeed 为 normal。
+- src/overlay/ProgramPreview.jsx 在未传入速度时也回退到 normal。
+- src/overlay/ProgramPreview.module.css 的 CSS fallback 仍是 normal 对应的 620ms / 520ms。
+
+修复：
+- 默认过场速度改为 slow。
+- ProgramPreview fallback 改为 slow。
+- CSS fallback 同步改为 slow 模式：遮罩 820ms，场景 resolve 700ms。
+
+
+2. 多个场景中文字体底部被裁切
+
+问题：
+- 队伍名、选手名等中文粗体在部分场景中底部被截断。
+- 主要出现在队伍阵容、流程包装、结果、感谢页、旧版首发阵容和倒计时赛程卡片中。
+
+原因：
+- 多处大字号标题使用了过低 line-height，例如 0.9、0.95、1.02。
+- 这些元素同时带有 overflow: hidden / nowrap / ellipsis。
+- 中文字体字形高度比英文字母更吃垂直空间，低 line-height 会直接裁掉下缘。
+
+涉及文件：
+- src/scenes/roster/RosterScene.module.css
+- src/scenes/matchup/MatchupScene.module.css
+- src/scenes/thanks/ThanksScene.module.css
+- src/scenes/result/ResultScene.jsx
+- src/scenes/legacy-fcol/FriesStartingLineupScene.jsx
+- src/scenes/countdown/CountdownScene.module.css
+
+修复：
+- 将中文可能出现的队伍名、选手名、标题 line-height 统一提升到 1.12。
+- 保留 nowrap / ellipsis 的布局策略，同时给中文字形足够高度。
+
+
+3. 中场倒计时赛程卡片视觉风格不统一
+
+问题：
+- 中场控制 > 倒计时子项右侧对阵图使用黑色背景，与左侧倒计时的白灰播出风格不一致。
+- 队伍名字体观感也和倒计时主视觉不一致。
+
+原因：
+- src/scenes/countdown/CountdownScene.module.css 中 schedule card 使用深色渐变、黑色分隔线和亮色文字。
+- 队伍行背景直接依赖 --schedule-logo-bg，导致整体偏暗。
+
+修复：
+- 将单场赛程卡和多场列表卡改为白灰 broadcast panel 风格。
+- 调整 logo cell、队伍行、分隔线、grid texture 和 shadow。
+- 队伍名改为深色主题文字，并同步使用更适合中文的 line-height。
+
+
+4. 设置倒计时时间后直接 TAKE 不会启动 Overlay 倒计时
+
+问题：
+- 用户第一次使用倒计时场景时，通常只会设置时间后直接 TAKE。
+- 原逻辑下，不点“重启”只会让预览显示静态时间，TAKE 到 Overlay 后不会开始走动。
+
+原因：
+- src/app/editors/show-package/CountdownEditor.jsx 中分钟/秒输入原本只存在本地 state，没有写入项目数据。
+- 只有点击“重启”时才会写入 durationSeconds 和 targetTimestamp。
+- src/app/App.jsx 中 Preview 使用 project，Overlay 使用 programProject；Overlay 只接收 TAKE 后发布的 program 状态。
+- src/scenes/countdown/CountdownScene.jsx 在 targetTimestamp 为 0 时只显示静态 durationSeconds，不会倒计时。
+
+修复：
+- 输入分钟/秒时立即写入 durationSeconds，并设置 startCountdownOnTake 标记。
+- 新增默认字段 startCountdownOnTake: false。
+- TAKE 时如果当前场景是 countdown 且存在 startCountdownOnTake，就自动生成 targetTimestamp。
+- TAKE 后同步清除标记，避免重复 TAKE 时反复重置计时。
+- “重启”仍保持立即开始倒计时；“停止”会清除待启动标记。
